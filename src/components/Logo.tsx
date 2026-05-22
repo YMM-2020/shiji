@@ -1,0 +1,90 @@
+interface LogoProps {
+  size?: number
+  showText?: boolean
+}
+
+export default function Logo({ size = 36, showText = true }: LogoProps) {
+  return (
+    <div className="flex items-center gap-2.5">
+      {/* Icon */}
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 64 64"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* Outer ring — the "视" (lens / field of view) */}
+        <circle
+          cx="32"
+          cy="32"
+          r="30"
+          stroke="url(#logoGrad1)"
+          strokeWidth="2.5"
+          fill="none"
+        />
+        {/* Inner subtle ring */}
+        <circle
+          cx="32"
+          cy="32"
+          r="22"
+          stroke="url(#logoGrad2)"
+          strokeWidth="0.8"
+          strokeDasharray="4 5"
+          fill="none"
+        />
+
+        {/* Connection lines — the "己" (self through connections) */}
+        <line x1="32" y1="32" x2="17" y2="17" stroke="#93c5fd" strokeWidth="1.8" strokeLinecap="round" />
+        <line x1="32" y1="32" x2="47" y2="15" stroke="#93c5fd" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="32" y1="32" x2="51" y2="35" stroke="#93c5fd" strokeWidth="1.8" strokeLinecap="round" />
+        <line x1="32" y1="32" x2="15" y2="37" stroke="#93c5fd" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="32" y1="32" x2="22" y2="52" stroke="#93c5fd" strokeWidth="1.8" strokeLinecap="round" />
+        <line x1="32" y1="32" x2="43" y2="50" stroke="#93c5fd" strokeWidth="1.5" strokeLinecap="round" />
+
+        {/* Peripheral nodes — memories orbiting the self */}
+        <circle cx="17" cy="17" r="4" fill="#60a5fa" />
+        <circle cx="47" cy="15" r="3.2" fill="#93c5fd" />
+        <circle cx="51" cy="35" r="4" fill="#60a5fa" />
+        <circle cx="15" cy="37" r="3.2" fill="#93c5fd" />
+        <circle cx="22" cy="52" r="3.8" fill="#60a5fa" />
+        <circle cx="43" cy="50" r="3.2" fill="#93c5fd" />
+
+        {/* Central node — "己" (the self) */}
+        <circle cx="32" cy="32" r="7" fill="#2563eb" />
+        {/* Inner eye-like highlight */}
+        <circle cx="32" cy="32" r="3.5" fill="#eff6ff" opacity="0.6" />
+        <circle cx="30" cy="30" r="1.5" fill="#fff" opacity="0.8" />
+
+        {/* Gradients */}
+        <defs>
+          <linearGradient id="logoGrad1" x1="0" y1="0" x2="64" y2="64">
+            <stop offset="0%" stopColor="#2563eb" />
+            <stop offset="100%" stopColor="#7c3aed" />
+          </linearGradient>
+          <linearGradient id="logoGrad2" x1="0" y1="0" x2="64" y2="64">
+            <stop offset="0%" stopColor="#bfdbfe" />
+            <stop offset="100%" stopColor="#ddd6fe" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+      {/* Text */}
+      {showText && (
+        <div>
+          <h1
+            className="font-bold text-gray-800 text-sm leading-tight"
+            style={{
+              background: 'linear-gradient(135deg, #2563eb, #7c3aed)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}
+          >
+            视己
+          </h1>
+          <p className="text-[10px] text-gray-400 leading-tight">观己所见，自成图景</p>
+        </div>
+      )}
+    </div>
+  )
+}
