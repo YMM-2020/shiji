@@ -297,6 +297,14 @@ app.get('/api/export/compact', requireAuth, (req: any, res) => {
   res.send(text)
 })
 
+// Serve built frontend in production
+const distPath = join(__dirname, '..', 'dist')
+app.use(express.static(distPath))
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api/')) return res.status(404).json({ error: 'Not found' })
+  res.sendFile(join(distPath, 'index.html'))
+})
+
 const PORT = process.env.PORT || 3001
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Memory API server running on http://0.0.0.0:${PORT}`)
