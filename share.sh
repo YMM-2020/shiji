@@ -46,7 +46,7 @@ TUNNEL_PID=""
 if [[ -x "$CF_BIN" ]]; then
   echo "║  正在启动 Cloudflare 公网隧道...                   ║"
   TUNNEL_LOG=$(mktemp)
-  "$CF_BIN" tunnel --url http://localhost:5173 >"$TUNNEL_LOG" 2>&1 &
+  "$CF_BIN" tunnel --protocol http2 --url http://localhost:5173 >"$TUNNEL_LOG" 2>&1 &
   TUNNEL_PID=$!
   for i in $(seq 1 16); do
     sleep 0.5
