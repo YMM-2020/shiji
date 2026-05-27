@@ -8,11 +8,19 @@ import { dirname, join } from 'path'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const db = new Database(join(__dirname, 'memories.db'))
 
-// Anthropic client — uses DeepSeek's Anthropic-compatible API
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_AUTH_TOKEN || '',
-  baseURL: process.env.ANTHROPIC_BASE_URL || 'https://api.deepseek.com/anthropic',
-})
+// Anthropic client — lazily initialised at request time so that
+// ANTHROPIC_AUTH_TOKEN / ANTHROPIC_BASE_URL are only read at runtime,
+// not during the build phase (avoids railpack "secret ID missing" errors).
+let _anthropic: Anthropic | null = null
+function getAnthropicClient(): Anthropic {
+  if (!_anthropic) {
+    _anthropic = new Anthropic({
+      apiKey: process.env.ANTHROPIC_AUTH_TOKEN || '',
+      baseURL: process.env.ANTHROPIC_BASE_URL || 'https://api.deepseek.com/anthropic',
+    })
+  }
+  return _anthropic
+}
 
 // Initialize schema
 db.exec(`
@@ -219,7 +227,7 @@ app.post('/api/chat', requireAuth, async (req: any, res) => {
       content: m.content,
     }))
 
-    const response = await anthropic.messages.create({
+    const response = await getAnthropicClient().messages.create({
       model: 'deepseek-chat',
       max_tokens: 2000,
       system: systemPrompt,
