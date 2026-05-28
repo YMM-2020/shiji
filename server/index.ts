@@ -146,6 +146,39 @@ async function start() {
     )
   `)
 
+  // ── Seed test data ──
+  const SEED_USER_ID = 'user_seed_001'
+  const existing = db.prepare('SELECT id FROM users WHERE id = ?').get(SEED_USER_ID)
+  if (!existing) {
+    const now = new Date().toISOString()
+    db.prepare('INSERT INTO users (id, phone, created_at, last_login_at) VALUES (?, ?, ?, ?)').run(SEED_USER_ID, '15212345678', now, now)
+
+    const seed = [
+      ['mem_seed_01', 'identity', '全栈工程师，擅长React和Node.js', '职业：全栈工程师', 0.95, 'manual', '用户自述'],
+      ['mem_seed_02', 'identity', 'base深圳，远程办公', 'base深圳', 0.9, 'manual', '用户自述'],
+      ['mem_seed_03', 'identity', '7年前端开发经验，3年后端经验', '10年开发经验', 0.85, 'inferred', '对话推断'],
+      ['mem_seed_04', 'identity', '中文母语，英语流利可以阅读技术文档', '语言能力', 0.9, 'manual', '用户自述'],
+      ['mem_seed_05', 'preference', '喜欢用VS Code，主题用One Dark Pro', '编辑器偏好', 0.85, 'inferred', '对话推断'],
+      ['mem_seed_06', 'preference', '代码风格偏好函数式编程，不喜欢class', '编程风格偏好', 0.8, 'inferred', '对话推断'],
+      ['mem_seed_07', 'preference', '习惯早上10点后开始写代码，晚上效率更高', '工作时间偏好', 0.7, 'inferred', '对话推断'],
+      ['mem_seed_08', 'relationship', '和PM小张配合做需求，沟通顺畅', '同事：PM小张', 0.75, 'inferred', '对话推断'],
+      ['mem_seed_09', 'relationship', '带了一个实习生小李，在教他TypeScript', '指导实习生小李', 0.8, 'inferred', '对话推断'],
+      ['mem_seed_10', 'project', '视己 — AI记忆图谱系统，React+Express+SQLite技术栈，部署在Railway', '项目：视己', 0.95, 'manual', '项目上下文'],
+      ['mem_seed_11', 'project', '公司内部CRM重构，从Angular 1.x迁移到React 18', 'CRM重构项目', 0.85, 'inferred', '对话推断'],
+      ['mem_seed_12', 'knowledge', '熟悉Anthropic Claude API的tool use和prompt caching机制', 'Claude API经验', 0.9, 'inferred', '对话内容'],
+      ['mem_seed_13', 'knowledge', '用过D3.js做数据可视化，做力导向图', 'D3.js可视化', 0.85, 'inferred', '项目代码'],
+      ['mem_seed_14', 'goal', '把视己项目打磨成可以正式分享给朋友使用的产品', '产品化视己', 0.9, 'manual', '用户明确表达'],
+      ['mem_seed_15', 'goal', '2026年深入学习Rust，做一个side project', '学习Rust', 0.7, 'inferred', '对话推断'],
+    ]
+
+    for (const [id, type, content, summary, confidence, source, sourceDetail] of seed) {
+      const evolution = JSON.stringify([{ timestamp: now, action: 'created', detail: '种子数据' }])
+      db.prepare('INSERT INTO memories (id, user_id, type, content, summary, confidence, source, source_detail, created_at, updated_at, last_accessed_at, tags, related_memories, evolution) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(id, SEED_USER_ID, type, content, summary, confidence, source, sourceDetail, now, now, now, '[]', '[]', evolution)
+    }
+
+    console.log('Seed data created: 1 user + 15 memories')
+  }
+
   // ── Auth middleware ──
   function requireAuth(req: any, res: any, next: any) {
     const header = req.headers.authorization || ''
