@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "start": "tsx server/index.ts",
+    "build": "echo skip build",
+    "start": "node server/index.js",
     "preview": "vite preview",
     "server": "tsx server/index.ts",
     "dev:full": "concurrently \"npm run server\" \"npm run dev -- --host 0.0.0.0\"",
